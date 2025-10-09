@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Empleados</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        background-color: #f5f5f5;
+      }
+      h1 {
+        color: #333;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 600px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 0.75rem;
+        text-align: left;
+      }
+      th {
+        background-color: #1976d2;
+        color: #fff;
+      }
+      tr:nth-child(even) {
+        background-color: #f0f8ff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lista de empleados</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Rol</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for employee in employees %}
+          <tr>
+            <td>{{ employee["id"] }}</td>
+            <td>{{ employee["first_name"] }}</td>
+            <td>{{ employee["last_name"] }}</td>
+            <td>{{ employee["role"] }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="4">No hay empleados registrados.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
