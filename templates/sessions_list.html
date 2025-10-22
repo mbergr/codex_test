@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="space-y-4">
+  <h2 class="text-2xl font-semibold">Historial</h2>
+  <form method="get" class="grid md:grid-cols-5 gap-3 bg-slate-800/60 border border-slate-700 rounded p-4 text-sm">
+    <input type="text" name="q" value="{{ filters.q }}" placeholder="Buscar descripción" class="bg-slate-900/60 border-slate-700 rounded" />
+    <select name="topic" class="bg-slate-900/60 border-slate-700 rounded">
+      <option value="">Tema</option>
+      {% for topic in topics %}
+        <option value="{{ topic.name }}" {% if filters.topic == topic.name %}selected{% endif %}>{{ topic.name }}</option>
+      {% endfor %}
+    </select>
+    <select name="tag" class="bg-slate-900/60 border-slate-700 rounded">
+      <option value="">Etiqueta</option>
+      {% for tag in tags %}
+        <option value="{{ tag.name }}" {% if filters.tag == tag.name %}selected{% endif %}>{{ tag.name }}</option>
+      {% endfor %}
+    </select>
+    <input type="date" name="from" value="{{ filters.from }}" class="bg-slate-900/60 border-slate-700 rounded" />
+    <input type="date" name="to" value="{{ filters.to }}" class="bg-slate-900/60 border-slate-700 rounded" />
+    <div class="md:col-span-5 flex justify-end gap-2">
+      <a href="{{ url_for('sessions_list') }}" class="px-3 py-1 bg-slate-700 rounded">Limpiar</a>
+      <button type="submit" class="px-3 py-1 bg-emerald-600 rounded">Aplicar</button>
+    </div>
+  </form>
+
+  <ul class="space-y-3">
+    {% for session in sessions %}
+      <li class="border border-slate-700 rounded bg-slate-800/40 p-4">
+        <div class="flex justify-between text-sm text-slate-300">
+          <span>{{ session.started_at.strftime('%d/%m/%Y %H:%M') }}</span>
+          <span>{{ session.duration_min }} min · {{ session.instrument.name }}</span>
+        </div>
+        {% if session.description %}
+          <p class="mt-2 text-slate-100">{{ session.description }}</p>
+        {% endif %}
+        <div class="mt-2 flex flex-wrap gap-2 text-xs text-slate-300">
+          {% for session_topic in session.topics[:3] %}
+            <span class="px-2 py-1 bg-slate-900/60 border border-slate-700 rounded-full">{{ session_topic.topic.name }}</span>
+          {% endfor %}
+          {% if session.topics|length > 3 %}
+            <span>+{{ session.topics|length - 3 }} más</span>
+          {% endif %}
+        </div>
+        <div class="mt-2 flex flex-wrap gap-2 text-xs">
+          {% for tag in session_tags.get(session.id, []) %}
+            <span class="px-2 py-1 bg-emerald-900/40 border border-emerald-500/50 rounded-full">#{{ tag }}</span>
+          {% endfor %}
+        </div>
+        <a href="{{ url_for('session_detail', session_id=session.id) }}" class="text-sm text-emerald-300 mt-3 inline-block">Ver detalle →</a>
+      </li>
+    {% else %}
+      <li class="text-slate-400">No se encontraron sesiones con los filtros actuales.</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

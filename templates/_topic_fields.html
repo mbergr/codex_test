@@ -1,0 +1,19 @@
+{% set topic_name = '' %}
+{% set topic_note = '' %}
+{% if topic is defined and topic %}
+  {% set topic_name = topic.topic.name %}
+  {% set topic_note = topic.note %}
+{% endif %}
+<div id="topic-{{ uid }}" class="topic-entry border border-slate-700 rounded p-3 space-y-2 bg-slate-800/60">
+  <div>
+    <label class="text-xs text-slate-400 uppercase">Tema</label>
+    <input type="text" name="topic_name_{{ uid }}" list="topic-options" required class="mt-1 w-full bg-slate-900/60 border-slate-700 rounded" placeholder="Escalas mayores" value="{{ topic_name }}" />
+  </div>
+  <div>
+    <label class="text-xs text-slate-400 uppercase">Notas</label>
+    <textarea name="topic_note_{{ uid }}" rows="2" class="mt-1 w-full bg-slate-900/60 border-slate-700 rounded" placeholder="Detalles del enfoque">{{ topic_note }}</textarea>
+  </div>
+  <div class="flex justify-end">
+    <button type="button" class="text-xs text-red-300 hover:text-red-200" onclick="this.closest('.topic-entry').remove()">Quitar</button>
+  </div>
+</div>
