@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-semibold">Analíticas</h2>
+    <div class="flex gap-2 text-sm">
+      <a href="{{ url_for('analytics', range='7d') }}" class="px-3 py-1 rounded {{ 'bg-emerald-600' if range_param == '7d' else 'bg-slate-700' }}">7 días</a>
+      <a href="{{ url_for('analytics', range='30d') }}" class="px-3 py-1 rounded {{ 'bg-emerald-600' if range_param == '30d' else 'bg-slate-700' }}">30 días</a>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="p-4 border border-slate-700 rounded bg-slate-800/50">
+      <h3 class="text-xs uppercase text-slate-400">Minutos totales</h3>
+      <p class="text-3xl font-semibold mt-2">{{ total_minutes }}</p>
+    </div>
+    <div class="p-4 border border-slate-700 rounded bg-slate-800/50">
+      <h3 class="text-xs uppercase text-slate-400">Racha actual</h3>
+      <p class="text-3xl font-semibold mt-2">{{ streak }} días</p>
+      {% if streak_start %}
+        <p class="text-xs text-slate-400 mt-1">{{ streak_start.strftime('%d/%m/%Y') }} – {{ streak_end.strftime('%d/%m/%Y') if streak_end else 'Hoy' }}</p>
+      {% endif %}
+    </div>
+    <div class="p-4 border border-slate-700 rounded bg-slate-800/50">
+      <h3 class="text-xs uppercase text-slate-400">Exportar / Importar</h3>
+      <div class="mt-2 space-x-2">
+        <a href="{{ url_for('export_json') }}" class="text-emerald-300 underline">JSON</a>
+        <a href="{{ url_for('export_csv') }}" class="text-emerald-300 underline">CSV</a>
+      </div>
+      <form action="{{ url_for('import_json') }}" method="post" enctype="multipart/form-data" class="mt-3 space-y-2 text-xs">
+        <input type="file" name="file" accept="application/json" class="text-slate-200" />
+        <button type="submit" class="px-3 py-1 bg-emerald-600 rounded">Importar</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <section class="p-4 border border-slate-700 rounded bg-slate-800/40">
+      <h3 class="text-lg font-semibold">Top temas</h3>
+      <ul class="mt-3 space-y-2 text-sm">
+        {% for name, minutes in topic_totals %}
+          <li class="flex justify-between"><span>{{ name }}</span><span>{{ minutes | round(1) }} min</span></li>
+        {% else %}
+          <li class="text-slate-400">Sin datos en este rango.</li>
+        {% endfor %}
+      </ul>
+    </section>
+    <section class="p-4 border border-slate-700 rounded bg-slate-800/40">
+      <h3 class="text-lg font-semibold">Distribución por etiquetas</h3>
+      <ul class="mt-3 space-y-2 text-sm">
+        {% for name, minutes in tag_totals %}
+          <li class="flex justify-between"><span>#{{ name }}</span><span>{{ minutes | round(1) }} min</span></li>
+        {% else %}
+          <li class="text-slate-400">Añade etiquetas para ver resultados.</li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+</section>
+{% endblock %}
