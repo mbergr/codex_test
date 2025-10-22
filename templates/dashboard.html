@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="grid gap-6 md:grid-cols-3">
+  <div class="p-4 bg-slate-800/80 rounded border border-slate-700">
+    <h2 class="text-sm uppercase tracking-wide text-slate-400">Racha</h2>
+    <p class="text-3xl font-semibold mt-2">{{ streak }} días</p>
+    {% if streak_start %}
+      <p class="text-xs text-slate-400 mt-1">Desde {{ streak_start.strftime('%d/%m/%Y') }}</p>
+    {% else %}
+      <p class="text-xs text-slate-400 mt-1">Comienza hoy tu racha ✨</p>
+    {% endif %}
+  </div>
+  <div class="p-4 bg-slate-800/80 rounded border border-slate-700">
+    <h2 class="text-sm uppercase tracking-wide text-slate-400">Minutos últimos 7 días</h2>
+    <p class="text-3xl font-semibold mt-2">{{ weekly_total }}</p>
+    <p class="text-xs text-slate-400 mt-1">{{ total_sessions }} sesiones totales</p>
+  </div>
+  <div class="p-4 bg-slate-800/80 rounded border border-slate-700">
+    <h2 class="text-sm uppercase tracking-wide text-slate-400">Top Temas</h2>
+    <ul class="mt-3 space-y-2 text-sm">
+      {% for name, minutes in top_topics %}
+        <li class="flex justify-between"><span>{{ name }}</span><span>{{ minutes | round(1) }} min</span></li>
+      {% else %}
+        <li class="text-slate-400">Aún no hay temas registrados.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="bg-slate-800/80 rounded border border-slate-700 p-4">
+  <h2 class="text-sm uppercase tracking-wide text-slate-400 mb-4">Tiempo por tema (últimos 7 días)</h2>
+  <canvas id="topicsChart" height="160"></canvas>
+</section>
+
+<script>
+  const ctx = document.getElementById('topicsChart');
+  if (ctx) {
+    const labels = {{ chart_labels|tojson }};
+    const data = {{ chart_data|tojson }};
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Minutos',
+          data,
+          backgroundColor: '#34d399'
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            ticks: { color: '#cbd5f5' },
+            grid: { color: 'rgba(148, 163, 184, 0.2)' }
+          },
+          x: {
+            ticks: { color: '#cbd5f5' },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  }
+</script>
+{% endblock %}
