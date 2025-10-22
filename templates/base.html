@@ -17,8 +17,9 @@
         <h1 class="text-xl font-semibold">Practicelog</h1>
         <nav class="ml-auto flex gap-4 text-sm">
           <a href="{{ url_for('dashboard') }}" class="hover:text-emerald-300">Dashboard</a>
-          <a href="{{ url_for('new_session') }}" class="hover:text-emerald-300">Nueva sesión</a>
           <a href="{{ url_for('sessions_list') }}" class="hover:text-emerald-300">Historial</a>
+          <a href="{{ url_for('new_session') }}" class="hover:text-emerald-300">Nueva sesión</a>
+          <a href="{{ url_for('analytics') }}" class="hover:text-emerald-300">Analíticas</a>
         </nav>
       </div>
     </header>
