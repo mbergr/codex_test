@@ -57,6 +57,10 @@ class Session(db.Model, TimestampMixin):
         lazy="joined",
     )
 
+    __table_args__ = (
+        Index("ix_sessions_started_at", "started_at"),
+    )
+
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<Session {self.id} {self.started_at}>"
 
