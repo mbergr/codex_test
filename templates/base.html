@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title or "Practicelog" }}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="{{ url_for('static', filename='js/tags.js') }}"></script>
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <header class="bg-slate-800 border-b border-slate-700">
+      <div class="max-w-5xl mx-auto flex items-center gap-4 px-4 py-3">
+        <img src="{{ url_for('static', filename='logo.svg') }}" alt="Practicelog" class="w-8 h-8" />
+        <h1 class="text-xl font-semibold">Practicelog</h1>
+        <nav class="ml-auto flex gap-4 text-sm">
+          <a href="{{ url_for('dashboard') }}" class="hover:text-emerald-300">Dashboard</a>
+          <a href="{{ url_for('new_session') }}" class="hover:text-emerald-300">Nueva sesión</a>
+          <a href="{{ url_for('sessions_list') }}" class="hover:text-emerald-300">Historial</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-6 space-y-6">
+      {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+          <div class="space-y-2">
+            {% for category, message in messages %}
+              <div class="px-4 py-3 rounded border {{ 'border-emerald-400 bg-emerald-950/40 text-emerald-200' if category == 'success' else 'border-red-500 bg-red-900/40 text-red-100' }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="py-6 text-center text-xs text-slate-500">
+      &copy; {{ now.year }} Practicelog · Construido con Flask, SQLite y amor musical.
+    </footer>
+  </body>
+</html>
